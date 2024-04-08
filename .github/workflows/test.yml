@@ -404,6 +404,7 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
+
       - name: Setup Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v2
         with:
@@ -634,17 +635,17 @@ jobs:
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
+      - name: Set up requirements.txt for caching
+        run: |
+          echo "pdiff" > requirements.txt
+          echo "cryptography" >> requirements.txt
+          echo "pytest" >> requirements.txt
+
       - name: Set up Python
         uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
         with:
           python-version: "3.11"
-      - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4
-        id: cache-pip-pdiff
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-pdiff
-          restore-keys: |
-            ${{ runner.os }}-pip-pdiff
+          cache: "pip"
 
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip pdiff cryptography
