@@ -113,20 +113,16 @@ def find_changed_files(
     """
     # create repo
     repo = Repo(".")
-    # identify commit on branch1
-    branch1_commit = repo.commit(branch1)
-    # identify commit on branch2
-    branch2_commit = repo.commit(branch2)
-    # compare two branches
-    diff_index = branch1_commit.diff(branch2_commit)
+    # Get the diff between two branches
+    diff = repo.git.diff(f"{branch1}..{branch2}", name_only=True)
 
     # Start empty list of changed files
     changed_files = []
 
     # For every file that has changed between commits
-    for file in diff_index:
+    for file in diff.splitlines():
         # Get pathlib.Path object
-        filepath = Path(file.a_path)
+        filepath = Path(file)
         # If file does not match any in the ignore list, add containing directory to changed_files
         if not any(filepath.match(ignored_path) for ignored_path in ignore):
             changed_files.append(filepath)
