@@ -489,6 +489,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        modules: ["${{ fromJson(needs.nf-test-changes.outputs.modules) }}"]
+        subworkflows: ["${{ fromJson(needs.nf-test-changes.outputs.subworkflows) }}"]
         path: ["${{ fromJson(needs.nf-test-changes.outputs.paths) }}"]
         profile: [conda, docker, singularity]
         exclude:
@@ -695,7 +697,7 @@ jobs:
             --profile=${{ matrix.profile }} \
             --tap=test.tap \
             --verbose \
-            ${{ matrix.tags }}
+            ${{ matrix.modules }} ${{ matrix.subworkflows }}
 
       - uses: pcolby/tap-summary@0959cbe1d4422e62afc65778cdaea6716c41d936 # v1
         with:
