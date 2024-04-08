@@ -70,8 +70,8 @@ def parse_args() -> argparse.Namespace:
         "-t",
         "--types",
         nargs="+",
-        choices=["function", "process", "workflow", "pipeline", "tag"],
-        default=["function", "process", "workflow", "pipeline", "tag"],
+        choices=["function", "process", "workflow", "pipeline"],
+        default=["function", "process", "workflow", "pipeline"],
         help="Types of tests to include.",
     )
     return parser.parse_args()
@@ -209,7 +209,7 @@ def process_files(files: list[Path]) -> list[str]:
 
 
 def convert_nf_test_files_to_test_types(
-    lines: list[str], types: list[str] = ["function", "process", "workflow", "pipeline", "tag"]
+    lines: list[str], types: list[str] = ["function", "process", "workflow", "pipeline"]
 ) -> dict[str, list[str]]:
     """
     Generate a dictionary of function, process and workflow lists from the lines.
