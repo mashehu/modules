@@ -192,8 +192,7 @@ def process_files(files: list[Path]) -> list[str]:
     for file in files:
         with open(file) as f:
             is_pipeline_test = True
-            lines = f.readlines()
-            for line in lines:
+            for line in f:
                 line = line.strip()
                 if line.startswith(("workflow", "process", "function")):
                     words = line.split()
@@ -213,7 +212,7 @@ def convert_nf_test_files_to_test_types(
     lines: list[str], types: list[str] = ["function", "process", "workflow", "pipeline"]
 ) -> dict[str, list[str]]:
     """
-    Generate a dictionary of function, process and workflow lists from the lines.
+    Generate a dictionary of function, process, and workflow lists from the lines.
 
     Args:
         lines (list): List of lines to process.
@@ -222,16 +221,16 @@ def convert_nf_test_files_to_test_types(
     Returns:
         dict: Dictionary with function, process and workflow lists.
     """
-    # Populate empty dict from types
     result: dict[str, list[str]] = {key: [] for key in types}
 
     for line in lines:
-        words = line.split()
-        if len(words) == 2 and re.match(r'^".*"$', words[1]):
-            keyword = words[0]
-            name = words[1].strip("'\"")  # Strip both single and double quotes
+        match = re.match(r"^(workflow|process|function|pipeline)\s+(.*)$", line)
+        if match:
+            keyword = match.group(1)
+            name = match.group(2).strip("'\"")
             if keyword in types:
                 result[keyword].append(name)
+
     return result
 
 
