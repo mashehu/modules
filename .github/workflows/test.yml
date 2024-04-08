@@ -108,8 +108,8 @@ jobs:
     outputs:
       # Expose detected tags as 'modules' and 'workflows' output variables
       paths: ${{ steps.list.outputs.changes }}
-      modules: ${{ steps.outputs.outputs.modules }}
-      subworkflows: ${{ steps.outputs.outputs.subworkflows}}
+      modules: ${{ steps.components.outputs.modules }}
+      subworkflows: ${{ steps.components.outputs.subworkflows}}
 
     steps:
       - uses: actions/setup-python@v4
@@ -139,15 +139,15 @@ jobs:
           ) >> $GITHUB_OUTPUT
 
       - name: Separate modules and subworkflows
-        id: outputs
+        id: components
         run: |
           echo modules=$(echo '${{ steps.list.outputs.changes }}' | jq -c '. | map(select(contains("modules"))) | map(gsub("modules/nf-core/"; ""))') >> $GITHUB_OUTPUT
           echo subworkflows=$(echo '${{ steps.list.outputs.changes }}' | jq '. | map(select(contains("subworkflows"))) | map(gsub("subworkflows/nf-core/"; ""))') >> $GITHUB_OUTPUT
 
       - name: debug
         run: |
-          echo ${{ steps.outputs.outputs.modules }}
-          echo ${{ steps.outputs.outputs.subworkflows }}
+          echo ${{ steps.components.outputs.modules }}
+          echo ${{ steps.components.outputs.subworkflows }}
 
   nf-core-lint-modules:
     runs-on: ${{ github.event.inputs.runners  || 'self-hosted' }}
