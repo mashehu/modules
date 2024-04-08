@@ -282,11 +282,10 @@ if __name__ == "__main__":
         changed_files = changed_files + detect_include_files(changed_files, include_files)
     nf_test_files = detect_nf_test_files(changed_files)
     lines = process_files(nf_test_files)
-    result = convert_nf_test_files_to_test_types(lines)
+    result = convert_nf_test_files_to_test_types(lines, args.types)  # Get only relevant results (specified by -t)
 
-    # Get only relevant results (specified by -t)
     # Unique using a set
-    target_results = list({item for sublist in map(result.get, args.types) for item in sublist})
+    target_results = list({item for sublist in result[args.types] for item in sublist})
 
     # Parse files to identify nf-tests with changed dependencies
     changed_dep_files = find_changed_dependencies([Path(".")], target_results)
