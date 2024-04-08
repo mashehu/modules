@@ -224,10 +224,12 @@ def convert_nf_test_files_to_test_types(
     result: dict[str, list[str]] = {key: [] for key in types}
 
     for line in lines:
-        match = re.match(r"^(workflow|process|function|pipeline|tag)\s+(.*)$", line)
-        if match:
-            keyword = match.group(1)
-            name = match.group(2).strip("'\"")
+        words = line.split()
+                if len(words) == 2 and re.match(
+                    r"^(workflow|process|function|pipeline|tag)$", words[1]
+                ):
+                result.append(line)
+                is_pipeline_test = False
             if keyword in types:
                 result[keyword].append(name)
 
