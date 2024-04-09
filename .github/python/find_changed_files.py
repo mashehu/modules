@@ -113,8 +113,13 @@ def find_changed_files(
     """
     # create repo
     repo = Repo(".")
+    # identify commit on branch1
+    branch1_commit = repo.commit(branch1)
     # Get the diff between two branches
-    diff = repo.git.diff(f"{branch1}..{branch2}", name_only=True)
+    # identify commit on branch2
+    branch2_commit = repo.commit(branch2)
+    # compare two branches
+    diff_index = branch1_commit.diff(branch2_commit)
 
     # Start empty list of changed files
     changed_files = []
