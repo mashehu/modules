@@ -127,7 +127,7 @@ def find_changed_files(
     # For every file that has changed between commits
     for file in diff_index:
         # Get pathlib.Path object
-        filepath = Path(file)
+        filepath = Path(file.a_path)
         # If file does not match any in the ignore list, add containing directory to changed_files
         if not any(filepath.match(ignored_path) for ignored_path in ignore):
             changed_files.append(filepath)
